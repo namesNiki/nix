@@ -9,12 +9,7 @@
     [ ./hardware-configuration.nix
       <home-manager/nixos>
     ];
-  nixpkgs.config = { 
-    allowUnfree = true;
-    permittedInsecurePackages = [
-      "electron-24.8.6"
-    ];
-  };
+  nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   #Boot menu and systemd
@@ -37,80 +32,41 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
+  #Systemd
+  systemd.services.seatd = {
+    enable = true;
+  };
+
   #Localization
   time.timeZone = "Europe/Warsaw";
 
-  #Dwm & Graphics
+  #Hyprland & Graphics
+  programs.hyprland.enable = true;
   services.xserver = {
     enable = true;
     displayManager.startx.enable = true;
-    windowManager.dwm.enable = true;
+    windowManager.hypr.enable = true;
   };
-
-  #Dwm & Dmenu overlays
-  nixpkgs.overlays = [
-	(final: prev: {
-	  dwm = prev.dwm.overrideAttrs (old: { src = /etc/nixos/assets/dwm-6.4 ;});
-	})
-	(final: prev: {
-	  dmenu = prev.dmenu.overrideAttrs (old: { src = /etc/nixos/assets/dmenu_test ;});
-	})
-  ];
   
   #Networking
   networking.hostName = "nya";
 
   #Sound
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = true;
-  };
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
 
   environment.systemPackages = with pkgs; [
   	#Utils
   	wget
     neofetch
     git
-    ktorrent
-    vlc
-    drawpile
-    CuboCore.coreshot
 
   	#Programming utilities
   	helix #Editors
   	vim
-    jetbrains.idea-community
-    
-    raylib # Libraries
-    mesa
-    xorg.libX11
-    xorg.libX11.dev
-
-    gnumake # Make
-    cmake
-
-    docker # Other
 
     #Programming languages
     rustup #Rust
-
-    zig # Zig
-    zls
-
-    gcc # C
-    ccls
-
-    jdk # Java
-
-    opam # Ocaml
-    ocamlPackages.utop
-    dune-release
-    ocamlPackages.ocaml-lsp
-    ocamlPackages.odoc
-    ocamlPackages.ocamlformat_0_26_0
 
   	#Web
   	firefox
@@ -118,23 +74,20 @@
     #Fun
     spotify
     steam
-    obsidian
-    discord
-    prismlauncher
-    blockbench-electron
-    sl
 
   	#System
-    kitty
-    alsa-oss
+  	kitty
+  	hyprpaper
+    waybar
+    wofi
     fzf
-    nitrogen
-    picom
-    dmenu
+    libsForQt5.qtwayland
+    libsForQt5.qt5ct
+    libva
   ];
 
   #Fonts
-  fonts.packages = with pkgs; [
+  fonts.fonts = with pkgs; [
     fira-code
     fira-code-symbols
     font-awesome

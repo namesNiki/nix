@@ -29,6 +29,7 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+	{ "coreshot", NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
@@ -61,7 +62,8 @@ static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray
 static const char *dmenubrowser[]  = { "bash", "/etc/nixos/assets/dmenu_scripts/browser.sh", NULL };
 static const char *dmenubookmark[]  = { "bash", "/etc/nixos/assets/dmenu_scripts/bookmark.sh", NULL };
 static const char *dmenusteam[]  = { "bash", "/etc/nixos/assets/dmenu_scripts/game.sh", NULL };
-static const char *termcmd[]  = { "alacritty", NULL };
+static const char *termcmd[]  = { "kitty", NULL };
+static const char *termcmdrust[]  = { "kitty", "--working-directory", "~/programs/rust", NULL };
 static const char *lower[]  = { "pamixer", "-d", "10", NULL };
 static const char *raise_vol[]  = { "pamixer", "-i", "10", NULL };
 static const char *toggle[]  ={ "pamixer", "-t", NULL };
@@ -69,6 +71,7 @@ static const char *toggle[]  ={ "pamixer", "-t", NULL };
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = termcmdrust } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = dmenusteam } },
 	{ MODKEY,                       XK_o,      spawn,          {.v = dmenubrowser } },
 	{ MODKEY|ShiftMask,             XK_o,      spawn,          {.v = dmenubookmark } },
